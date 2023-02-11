@@ -1,12 +1,9 @@
-from os import listdir, path
 import numpy as np
-import scipy, cv2, os, sys, argparse, audio
-import json, subprocess, random, string
+import cv2, os,audio
 from tqdm import tqdm
-from glob import glob
 import torch, face_detection
 from models import Wav2Lip
-import platform
+import moviepy.editor as mpe
 
 # parser = argparse.ArgumentParser(description='Inference code to lip-sync videos in the wild using Wav2Lip models')
 
@@ -315,12 +312,12 @@ def generateResult(face, audiopath, outfile, checkpoint_path, resize_factor=1, r
 
 	print ("Number of frames available for inference: "+str(len(full_frames)))
 
-	if not audiopath.endswith('.wav'):
-		print('Extracting raw audio...')
-		command = 'ffmpeg -y -i {} -strict -2 {}'.format(audiopath, 'temp/temp.wav')
+	# if not audiopath.endswith('.wav'):
+	# 	print('Extracting raw audio...')
+	# 	command = 'ffmpeg -y -i {} -strict -2 {}'.format(audiopath, 'temp/temp.wav')
 
-		subprocess.call(command, shell=True)
-		audiopath = 'temp/temp.wav'
+	# 	subprocess.call(command, shell=True)
+	# 	audiopath = 'temp/temp.wav'
 
 	wav = audio.load_wav(audiopath, 16000)
 	mel = audio.melspectrogram(wav)
@@ -374,11 +371,12 @@ def generateResult(face, audiopath, outfile, checkpoint_path, resize_factor=1, r
 			out.write(f)
 
 	out.release()
-	command = 'ffmpeg -y -i {} -i {} -strict -2 -q:v 1 {}'.format(audiopath, 'temp/result.avi', outfile)
-	p = subprocess.Popen(command, stdout = subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
-	print('completed')
-	out,err = p.communicate()
-	print(out)
+	 
+	my_clip = mpe.VideoFileClip('temp/result.avi')
+	audio_background = mpe.AudioFileClip(audiopath)
+	final_clip = my_clip.set_audio(audio_background)
+	final_clip.write_videofile(outfile,fps=fps)
+	
 	return 
 # if __name__ == '__main__':
 # 	main()
