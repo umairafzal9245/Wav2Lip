@@ -277,7 +277,7 @@ def load_model(path):
 # 	command = 'ffmpeg -y -i {} -i {} -strict -2 -q:v 1 {}'.format(args.audio, 'temp/result.avi', args.outfile)
 # 	subprocess.call(command, shell=platform.system() != 'Windows')
 
-def generateResult(face, audio, outfile, checkpoint_path, resize_factor=1, rotate=False, crop=(0, -1, 0, -1), fpss=25, wav2lip_batch_size=128):
+def generateResult(face, audiopath, outfile, checkpoint_path, resize_factor=1, rotate=False, crop=(0, -1, 0, -1), fpss=25, wav2lip_batch_size=128):
 	
 	if not os.path.isfile(face):
 		raise ValueError('--face argument must be a valid path to video/image file')
@@ -315,14 +315,14 @@ def generateResult(face, audio, outfile, checkpoint_path, resize_factor=1, rotat
 
 	print ("Number of frames available for inference: "+str(len(full_frames)))
 
-	if not audio.endswith('.wav'):
+	if not audiopath.endswith('.wav'):
 		print('Extracting raw audio...')
-		command = 'ffmpeg -y -i {} -strict -2 {}'.format(audio, 'temp/temp.wav')
+		command = 'ffmpeg -y -i {} -strict -2 {}'.format(audiopath, 'temp/temp.wav')
 
 		subprocess.call(command, shell=True)
-		audio = 'temp/temp.wav'
+		audiopath = 'temp/temp.wav'
 
-	wav = audio.load_wav(audio, 16000)
+	wav = audio.load_wav(audiopath, 16000)
 	mel = audio.melspectrogram(wav)
 	print(mel.shape)
 
