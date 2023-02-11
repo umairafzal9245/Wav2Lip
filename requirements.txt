@@ -8,3 +8,4 @@ tqdm==4.45.0
 numba==0.48
 flask-ngrok
 imageio==2.4.1
+moviepy
