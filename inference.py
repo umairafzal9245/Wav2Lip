@@ -277,7 +277,7 @@ def load_model(path):
 # 	command = 'ffmpeg -y -i {} -i {} -strict -2 -q:v 1 {}'.format(args.audio, 'temp/result.avi', args.outfile)
 # 	subprocess.call(command, shell=platform.system() != 'Windows')
 
-def generateResult(face, audiopath, outfile, checkpoint_path, resize_factor=1, rotate=False, crop=(0, -1, 0, -1), fpss=25, wav2lip_batch_size=128):
+def generateResult(face, audiopath, outfile, checkpoint_path, resize_factor=1, rotate=False, crop=(0, -1, 0, -1), fpss=25, wav2lip_batch_size=128, static=False):
 	
 	if not os.path.isfile(face):
 		raise ValueError('--face argument must be a valid path to video/image file')
