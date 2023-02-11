@@ -374,10 +374,11 @@ def generateResult(face, audiopath, outfile, checkpoint_path, resize_factor=1, r
 			out.write(f)
 
 	out.release()
+	command = 'ffmpeg -y -i {} -i {} -strict -2 -q:v 1 {}'.format(audiopath, 'temp/result.avi', outfile)
+	p = subprocess.Popen(command, stdout = subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
 	print('completed')
-	# command = 'ffmpeg -y -i {} -i {} -strict -2 -q:v 1 {}'.format(audio, 'temp/result.avi', outfile)
-	# subprocess.call(command, shell=platform.system() != 'Windows')
-
-
+	out,err = p.communicate()
+	print(out)
+	return 
 # if __name__ == '__main__':
 # 	main()
